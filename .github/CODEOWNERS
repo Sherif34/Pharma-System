@@ -1,0 +1,11 @@
+# Service owners from proposal version 0.3.
+# GitHub requires each named code owner to have accepted write access.
+/services/catalogue-service/ @Sherif34
+/services/inventory-service/ @Sherif34
+/services/purchasing-service/ @Sherif34
+/services/operations-reporting-service/ @RoberSamy1
+/services/access-control-service/ @RoberSamy1
+# Ahmed Abdelazeem: receiving-expiry-service, stock-review-service, customer-register-service.
+# Add Ahmed's GitHub username after it is provided and access is accepted.
+# Amr tamer: pricing-service, data-continuity-service.
+# Add Amr's GitHub username after it is provided and access is accepted.
