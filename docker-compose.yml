@@ -1,0 +1,131 @@
+services:
+  catalogue-service:
+    build: ./services/catalogue-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: catalogue-service
+    ports:
+      - "3001:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  inventory-service:
+    build: ./services/inventory-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: inventory-service
+    ports:
+      - "3002:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  receiving-expiry-service:
+    build: ./services/receiving-expiry-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: receiving-expiry-service
+    ports:
+      - "3003:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  pricing-service:
+    build: ./services/pricing-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: pricing-service
+    ports:
+      - "3004:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  purchasing-service:
+    build: ./services/purchasing-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: purchasing-service
+    ports:
+      - "3005:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  stock-review-service:
+    build: ./services/stock-review-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: stock-review-service
+    ports:
+      - "3006:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  customer-register-service:
+    build: ./services/customer-register-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: customer-register-service
+    ports:
+      - "3007:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  operations-reporting-service:
+    build: ./services/operations-reporting-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: operations-reporting-service
+    ports:
+      - "3008:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  access-control-service:
+    build: ./services/access-control-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: access-control-service
+    ports:
+      - "3009:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  data-continuity-service:
+    build: ./services/data-continuity-service
+    environment:
+      PORT: "3000"
+      SERVICE_NAME: data-continuity-service
+    ports:
+      - "3010:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
