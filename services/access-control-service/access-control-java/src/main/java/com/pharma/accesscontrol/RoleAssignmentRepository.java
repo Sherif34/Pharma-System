@@ -1,8 +1,13 @@
 package com.pharma.accesscontrol;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleAssignmentRepository {
+
+    Optional<User> findUserById(String userId);
+
+    Optional<Role> findRoleById(String roleId);
 
     RoleAssignment save(RoleAssignment assignment);
 
