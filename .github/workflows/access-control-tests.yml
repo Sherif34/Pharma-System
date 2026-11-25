@@ -1,0 +1,31 @@
+name: Access Control Tests
+
+on:
+  push:
+    branches:
+      - rober/us17-devops
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Run tests and generate coverage
+        working-directory: services/access-control-service/access-control-java
+        run: mvn --batch-mode verify
+
+      - name: Save coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: access-control-coverage
+          path: services/access-control-service/access-control-java/target/site/jacoco/
