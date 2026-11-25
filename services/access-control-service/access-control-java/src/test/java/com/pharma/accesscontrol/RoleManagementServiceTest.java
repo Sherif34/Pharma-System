@@ -30,8 +30,7 @@ class RoleManagementServiceTest {
         assertEquals(assignment, result);
         verify(repository).save(assignment);
     }
-}
-@Test
+    @Test
 void retrievesRolesForUser() {
     RoleAssignment assignment = new RoleAssignment("U-014", "R-CSA");
     var expected = java.util.List.of(assignment);
@@ -40,3 +39,5 @@ void retrievesRolesForUser() {
     assertEquals(expected, service.getRolesForUser("U-014"));
     verify(repository).findByUserId("U-014");
 }
+}
+
