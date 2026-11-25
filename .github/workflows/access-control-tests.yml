@@ -10,9 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Get the code
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Java 21
         uses: actions/setup-java@v5
@@ -29,3 +35,16 @@ jobs:
         with:
           name: access-control-coverage
           path: services/access-control-service/access-control-java/target/site/jacoco/
+
+      - name: Authenticate with SonarQube Cloud
+        uses: SonarSource/sonarqube-auth-action@v1
+        id: sonar-auth
+
+      - name: Analyze code and check quality gate
+        working-directory: services/access-control-service/access-control-java
+        run: >
+          mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.organization=${{ steps.sonar-auth.outputs.organization }}
+          -Dsonar.projectKey=${{ steps.sonar-auth.outputs.project-key }}
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.qualitygate.wait=true
