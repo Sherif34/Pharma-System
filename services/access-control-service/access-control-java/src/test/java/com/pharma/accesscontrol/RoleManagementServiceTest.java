@@ -1,4 +1,4 @@
-package com.pharma.accesscontrol;
+    package com.pharma.accesscontrol;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -30,4 +30,13 @@ class RoleManagementServiceTest {
         assertEquals(assignment, result);
         verify(repository).save(assignment);
     }
+}
+@Test
+void retrievesRolesForUser() {
+    RoleAssignment assignment = new RoleAssignment("U-014", "R-CSA");
+    var expected = java.util.List.of(assignment);
+    when(repository.findByUserId("U-014")).thenReturn(expected);
+
+    assertEquals(expected, service.getRolesForUser("U-014"));
+    verify(repository).findByUserId("U-014");
 }
