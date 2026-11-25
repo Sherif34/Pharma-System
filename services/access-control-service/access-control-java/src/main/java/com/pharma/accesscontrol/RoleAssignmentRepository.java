@@ -12,4 +12,6 @@ public interface RoleAssignmentRepository {
     RoleAssignment save(RoleAssignment assignment);
 
     List<RoleAssignment> findByUserId(String userId);
+
+    List<Role> getUserRoles(String userId);
 }
