@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 class RoleManagementServiceTest {
 
@@ -22,6 +22,10 @@ class RoleManagementServiceTest {
     @Test
     void assignsRoleToUser() {
         RoleAssignment assignment = new RoleAssignment("U-014", "R-CSA");
+        when(repository.findUserById("U-014"))
+        .thenReturn(Optional.of(new User("U-014", "staff14")));
+when(repository.findRoleById("R-CSA"))
+        .thenReturn(Optional.of(new Role("R-CSA", "COUNTER_STAFF")));
 
         when(repository.save(assignment)).thenReturn(assignment);
 

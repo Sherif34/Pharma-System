@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -22,6 +23,10 @@ class AccessControlServiceTest {
     void checksPermissionBeforeSavingAssignment() {
         RoleAssignment assignment = new RoleAssignment("U-014", "R-CSA");
         when(permissions.hasPermission("U-001", "MANAGE_ROLES")).thenReturn(true);
+        when(repository.findUserById("U-014"))
+        .thenReturn(Optional.of(new User("U-014", "staff14")));
+when(repository.findRoleById("R-CSA"))
+        .thenReturn(Optional.of(new Role("R-CSA", "COUNTER_STAFF")));
         when(repository.save(assignment)).thenReturn(assignment);
 
         assertEquals(assignment, service.assignRoleToUser("U-001", "U-014", "R-CSA"));

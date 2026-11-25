@@ -11,9 +11,14 @@ public class RoleManagementService {
     }
 
     public RoleAssignment assignRoleToUser(String userId, String roleId) {
-        RoleAssignment assignment = new RoleAssignment(userId, roleId);
-        return repository.save(assignment);
-    }
+    User user = repository.findUserById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Unknown user: " + userId));
+
+    Role role = repository.findRoleById(roleId)
+            .orElseThrow(() -> new IllegalArgumentException("Unknown role: " + roleId));
+
+    return repository.save(new RoleAssignment(user.userId(), role.roleId()));
+}
 
     public List<RoleAssignment> getRolesForUser(String userId) {
         return repository.findByUserId(userId);
