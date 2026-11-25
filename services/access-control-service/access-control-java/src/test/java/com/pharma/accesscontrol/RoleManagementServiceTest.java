@@ -39,5 +39,19 @@ void retrievesRolesForUser() {
     assertEquals(expected, service.getRolesForUser("U-014"));
     verify(repository).findByUserId("U-014");
 }
+
+        @Test
+    void reportsFailureWhenSavingRoleAssignmentFails() {
+        RoleAssignment assignment = new RoleAssignment("U-014", "R-CSA");
+        when(repository.save(assignment))
+                .thenThrow(new IllegalStateException("Could not save assignment"));
+
+        var error = org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> service.assignRoleToUser("U-014", "R-CSA"));
+
+        assertEquals("Could not save assignment", error.getMessage());
+        verify(repository).save(assignment);
+    }
 }
 
