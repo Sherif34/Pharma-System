@@ -1,0 +1,71 @@
+// services/pricing-service/Jenkinsfile
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK-17'
+        maven 'Maven-3.9'
+    }
+
+    environment {
+        SERVICE_DIR = 'services/pricing-service'
+        SONAR_PROJECT_KEY = 'pharma-pricing-service'
+    }
+
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Unit Tests & JaCoCo Coverage') {
+            steps {
+                dir(env.SERVICE_DIR) {
+                    sh 'mvn clean verify jacoco:report'
+                }
+            }
+            post {
+                always {
+                    junit "${env.SERVICE_DIR}/target/surefire-reports/*.xml"
+                    jacoco(
+                        execPattern: "${env.SERVICE_DIR}/target/jacoco.exec",
+                        classPattern: "${env.SERVICE_DIR}/target/classes",
+                        sourcePattern: "${env.SERVICE_DIR}/src/main/java"
+                    )
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                dir(env.SERVICE_DIR) {
+                    withSonarQubeEnv('SonarQube-Server') {
+                        sh '''
+                            mvn sonar:sonar \
+                              -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate Verification') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "pricing-service: JUnit tests, JaCoCo coverage, and SonarQube Quality Gate PASSED."
+        }
+        failure {
+            echo "pricing-service: Pipeline FAILED. Inspect JUnit XML reports or SonarQube Quality Gate."
+        }
+    }
+}

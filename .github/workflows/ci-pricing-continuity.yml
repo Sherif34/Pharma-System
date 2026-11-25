@@ -1,0 +1,65 @@
+name: CI - Pricing & Data Continuity Services (JUnit, JaCoCo & SonarQube)
+
+on:
+  push:
+    branches: [ "main", "develop", "feat/**" ]
+    paths:
+      - 'services/pricing-service/**'
+      - 'services/data-continuity-service/**'
+      - '.github/workflows/ci-pricing-continuity.yml'
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - 'services/pricing-service/**'
+      - 'services/data-continuity-service/**'
+      - '.github/workflows/ci-pricing-continuity.yml'
+
+jobs:
+  build-test-sonar:
+    name: Test & Quality Gate (${{ matrix.service }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [ pricing-service, data-continuity-service ]
+
+    defaults:
+      run:
+        working-directory: services/${{ matrix.service }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+          cache-dependency-path: services/${{ matrix.service }}/pom.xml
+
+      - name: Run JUnit 5 Unit Tests & Generate JaCoCo Coverage
+        run: mvn clean verify jacoco:report
+
+      - name: Upload JUnit & JaCoCo Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.service }}-reports
+          path: |
+            services/${{ matrix.service }}/target/surefire-reports/
+            services/${{ matrix.service }}/target/site/jacoco/
+
+      - name: SonarQube Analysis & Quality Gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: >
+          mvn sonar:sonar
+          -Dsonar.projectKey=pharma-${{ matrix.service }}
+          -Dsonar.host.url=$SONAR_HOST_URL
+          -Dsonar.token=$SONAR_TOKEN
+          -Dsonar.qualitygate.wait=true
