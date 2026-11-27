@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [catalogue, inventory, purchasing]
+        service: [catalogue, inventory, purchasing, stock-review]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
