@@ -1,0 +1,25 @@
+name: FR13 Java Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  customer-register-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run FR13 tests
+        working-directory: java-tests/services/customer-register-service
+        run: mvn -B clean verify
